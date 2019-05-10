@@ -28,18 +28,38 @@ class SharedAppHome extends State<SharedApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text('Font Size' ,style: TextStyle(fontSize: 20.0),),
-
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[],
+              ),
               new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Text('size : 20' , style: TextStyle(fontSize: 20.0),),
-                  new Text('size : 30' , style: TextStyle(fontSize: 30.0),),
-                  new Text('size : 40' , style: TextStyle(fontSize: 40.0),),
-                ],
-              )
-              ,
+                  
 
+                ],
+              ),
+              new Text(
+                'Font Size',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text(
+                    'size : 20',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  new Text(
+                    'size : 30',
+                    style: TextStyle(fontSize: 30.0),
+                  ),
+                  new Text(
+                    'size : 40',
+                    style: TextStyle(fontSize: 40.0),
+                  ),
+                ],
+              ),
               new Padding(
                 padding: EdgeInsets.all(15.0),
                 child: new TextField(
@@ -53,10 +73,16 @@ class SharedAppHome extends State<SharedApp> {
                   controller: controller,
                 ),
               ),
-              new FlatButton(onPressed: (){
-                
-              }, child: new Text('Save Font Size' , style: TextStyle(fontSize: 20.0  , color: Colors.white ),) , color: Colors.blueAccent,)
-            ],mainAxisAlignment: MainAxisAlignment.center,
+              new FlatButton(
+                onPressed: () {},
+                child: new Text(
+                  'Save Font Size',
+                  style: TextStyle(fontSize: 20.0, color: Colors.white),
+                ),
+                color: Colors.blueAccent,
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
           ),
         ),
       ),
@@ -84,17 +110,19 @@ class SharedAppHome extends State<SharedApp> {
     setState(() {
       try {
         int result = int.parse(controller.text);
-        if(result < 10){
+        if (result < 10) {
           AlertDialog dialog = new AlertDialog(
             content: new Text('입력이 잘못되었습니다'),
           );
-          showDialog(context: context, builder: (BuildContext context) => dialog);
-        }else if( result > 100){
+          showDialog(
+              context: context, builder: (BuildContext context) => dialog);
+        } else if (result > 100) {
           AlertDialog dialog = new AlertDialog(
             content: new Text('입력이 잘못되었습니다'),
           );
-          showDialog(context: context, builder: (BuildContext context) => dialog);
-        }else{
+          showDialog(
+              context: context, builder: (BuildContext context) => dialog);
+        } else {
           prefs.setDouble(key, result.toDouble());
           Scaffold.of(context).showSnackBar(SnackBar(
               content: Text('데이터가 저장되었습니다'), duration: Duration(seconds: 2)));

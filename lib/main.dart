@@ -30,7 +30,6 @@ class TabHome extends StatefulWidget {
 class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   TabController tabController;
 
-
   @override
   void initState() {
     super.initState();
@@ -48,20 +47,30 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
-      body: new TabBarView(
+      body:   new TabBarView(
         children: <Widget>[
-          new ConApp(title: "GS25",),
-          new ConApp(title: "CU",),
-          new ConApp(title: "MINI",),
-          new ConApp(title: "7-ELEVEN",),
-          new ConApp(title: "EMART24",),
+          new ConApp(
+            title: "GS25",
+          ),
+          new ConApp(
+            title: "CU",
+          ),
+          new ConApp(
+            title: "MINI",
+          ),
+          new ConApp(
+            title: "7-ELEVEN",
+          ),
+          new ConApp(
+            title: "EMART24",
+          ),
           new SharedApp(),
         ],
         controller: tabController,
       ),
       floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.share),
-          onPressed: (){
+          onPressed: () {
             print(tabController.index);
             Share.share('Hello World');
           }),
@@ -93,7 +102,4 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
       ),
     );
   }
-
 }
-
-
