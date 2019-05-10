@@ -1,8 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'tab/ConHome.dart';
 import 'tab/sharedHome.dart';
-import 'package:share/share.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -30,10 +34,35 @@ class TabHome extends StatefulWidget {
 class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   TabController tabController;
 
+
+  final String url = "https://sejongchurch.cafe24.com/flutter/convi/temp.txt";
+  String data;
+
+  // Function to get the JSON data
+  Future<String> getJSONData() async {
+
+    HttpClient client = new HttpClient();
+    client.getUrl(Uri.parse(url))
+        .then((HttpClientRequest request) {
+      return request.close();
+    })
+        .then((HttpClientResponse response) {
+      response.transform(utf8.decoder).listen((contents){
+
+        setState(() {
+          data = contents;
+        });
+
+      });
+    });
+
+    return data;
+  }
+
   @override
   void initState() {
     super.initState();
-
+//    this.getJSONData();
     tabController = new TabController(length: 6, vsync: this);
   }
 
@@ -47,34 +76,34 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
-      body:   new TabBarView(
-        children: <Widget>[
-          new ConApp(
-            title: "GS25",
-          ),
-          new ConApp(
-            title: "CU",
-          ),
-          new ConApp(
-            title: "MINI",
-          ),
-          new ConApp(
-            title: "7-ELEVEN",
-          ),
-          new ConApp(
-            title: "EMART24",
-          ),
-          new SharedApp(),
-        ],
-        controller: tabController,
-      ),
-      floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.share),
-          onPressed: () {
-            print(tabController.index);
-            Share.share('Hello World');
-          }),
-      bottomNavigationBar: new Material(
+      body: new FutureBuilder(future: DefaultAssetBundle.of(context).loadString('temp/temp.txt'), builder: (context , snapshot ){
+        return new TabBarView(
+          children: <Widget>[
+            new ConApp(
+              title: "GS25",
+              data: snapshot.data.toString(),
+            ),
+            new ConApp(
+              title: "CU",
+              data: snapshot.data.toString(),
+            ),
+            new ConApp(
+              title: "MINI",
+              data: snapshot.data.toString(),
+            ),
+            new ConApp(
+              title: "7-ELEVEN",
+              data: snapshot.data.toString(),
+            ),
+            new ConApp(
+              title: "EMART24",
+              data: snapshot.data.toString(),
+            ),
+            new SharedApp(),
+          ],
+          controller: tabController,
+        );
+      }), bottomNavigationBar: new Material(
         color: Colors.blueGrey,
         child: new TabBar(
           tabs: <Tab>[
@@ -91,7 +120,7 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
               icon: new Text('MINI'),
             ),
             new Tab(
-              icon: new Text('Emart'),
+              icon: new Text('E'),
             ),
             new Tab(
               icon: new Icon(Icons.settings),

@@ -12,6 +12,11 @@ class SharedAppHome extends State<SharedApp> {
   var nameOfApp = "Presist Key Value";
   var counter = 0;
   var key = "size";
+  var part = "part";
+  var part2 = "part2";
+
+
+  var _radioValue2 = 5;
 
   TextEditingController controller = new TextEditingController();
 
@@ -24,21 +29,11 @@ class SharedAppHome extends State<SharedApp> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(title: new Text('설정'),),
       body: new Container(
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  
-
-                ],
-              ),
               new Text(
                 'Font Size',
                 style: TextStyle(fontSize: 20.0),
@@ -73,14 +68,7 @@ class SharedAppHome extends State<SharedApp> {
                   controller: controller,
                 ),
               ),
-              new FlatButton(
-                onPressed: () {},
-                child: new Text(
-                  'Save Font Size',
-                  style: TextStyle(fontSize: 20.0, color: Colors.white),
-                ),
-                color: Colors.blueAccent,
-              )
+
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
@@ -97,7 +85,8 @@ class SharedAppHome extends State<SharedApp> {
   void _loadSaveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      counter = (prefs.getDouble(key) ?? 20);
+      counter = (prefs.getInt(key) ?? 20);
+      _radioValue2 = (prefs.getInt(part2) ?? 5);
       controller.text = counter.toString();
     });
   }
@@ -123,9 +112,11 @@ class SharedAppHome extends State<SharedApp> {
           showDialog(
               context: context, builder: (BuildContext context) => dialog);
         } else {
-          prefs.setDouble(key, result.toDouble());
-          Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text('데이터가 저장되었습니다'), duration: Duration(seconds: 2)));
+          prefs.setInt(key, result);
+          AlertDialog dialog = new AlertDialog(
+            content: new Text('저장되었습니다. 앱을 다시 재실행해주세요'),
+          );
+          showDialog(context: context, builder: (BuildContext context) => dialog);
         }
       } catch (error) {
         AlertDialog dialog = new AlertDialog(
@@ -133,6 +124,18 @@ class SharedAppHome extends State<SharedApp> {
         );
         showDialog(context: context, builder: (BuildContext context) => dialog);
       }
+    });
+  }
+
+
+
+  void _handleRadioValueChange2(int value) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('$part2 and $value');
+    prefs.setInt(part2, value);
+
+    setState(() {
+      _radioValue2 = value;
     });
   }
 }
