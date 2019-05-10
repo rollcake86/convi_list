@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'tab/cuHome.dart';
-import 'tab/emartHome.dart';
-import 'tab/gsHome.dart';
-import 'tab/miniHome.dart';
-import 'tab/sevenHome.dart';
+import 'tab/ConHome.dart';
 import 'tab/sharedHome.dart';
 import 'package:share/share.dart';
 
@@ -54,11 +50,11 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
     return new Scaffold(
       body: new TabBarView(
         children: <Widget>[
-          new GsApp(),
-          new CuApp(),
-          new SevenApp(),
-          new MiniApp(),
-          new EmartApp(),
+          new ConApp(title: "GS25",),
+          new ConApp(title: "CU",),
+          new ConApp(title: "MINI",),
+          new ConApp(title: "7-ELEVEN",),
+          new ConApp(title: "EMART24",),
           new SharedApp(),
         ],
         controller: tabController,
@@ -80,7 +76,7 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
               icon: new Text('CU'),
             ),
             new Tab(
-              icon: new Text('SEVEN'),
+              icon: new Text('7-11'),
             ),
             new Tab(
               icon: new Text('MINI'),
