@@ -33,30 +33,6 @@ class TabHome extends StatefulWidget {
 class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   TabController tabController;
 
-//  final String url = "https://sejongchurch.cafe24.com/flutter/convi/temp.txt";
-//  String data;
-//
-//  // Function to get the JSON data
-//  Future<String> getJSONData() async {
-//
-//    HttpClient client = new HttpClient();
-//    client.getUrl(Uri.parse(url))
-//        .then((HttpClientRequest request) {
-//      return request.close();
-//    })
-//        .then((HttpClientResponse response) {
-//      response.transform(utf8.decoder).listen((contents){
-//
-//        setState(() {
-//          data = contents;
-//        });
-//
-//      });
-//    });
-//
-//    return data;
-//  }
-
   @override
   void initState() {
     super.initState();
