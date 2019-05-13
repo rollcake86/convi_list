@@ -242,6 +242,11 @@ class ConHome extends State<ConApp> {
     if (result == 1) setState(() => ttsState = TtsState.stopped);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _onChange(String text) {
     setState(() {
       _newVoiceText = text;

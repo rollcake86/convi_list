@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'tab/TabHome.dart';
+
 import 'dart:async';
 import 'package:http/http.dart' as http;
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'tab/ConHome.dart';
-import 'tab/TabHome.dart';
+import 'dart:convert';
 
 void main() => runApp(MyApp());
 
@@ -39,6 +41,27 @@ class InitAppHome extends State<InitApp> {
 
   bool voiceCheck = true;
 
+  @override
+  void initState() {
+    super.initState();
+    getURLData();
+  }
+
+  var url = "http://sejongchurch.cafe24.com/flutter/convi/temp.txt";
+
+  // Function to get the JSON data
+  Future<String> getURLData() async {
+    var response = await http
+        .get(url, headers: {"charset": "UTF-8", "content-type": "text/plain"});
+
+    setState(() {
+      print(response.body);
+      array = response.body.split("\n");
+    });
+
+    return "succes";
+  }
+
   Future<String> getData() {
     return DefaultAssetBundle.of(context).loadString('temp/temp.txt');
   }
@@ -50,150 +73,161 @@ class InitAppHome extends State<InitApp> {
           title: new Text('콘비 리스트 - 조건 검색'),
         ),
         body: new FutureBuilder(
-            future: getData(),
-            builder: (context, snapshot) {
-                array = snapshot.data.toString().split("\n");
-                _resetData();
-                return new Container(
-                  child: new Center(
-                    child: new Column(
-                      children: <Widget>[
-                        new Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              new Radio(
-                                value: 0,
-                                groupValue: _radioValue1,
-                                onChanged: _handleRadioValueChange1,
-                              ),
-                              new Text(
-                                '1+1',
-                                style: new TextStyle(fontSize: 16.0),
-                              ),
-                              new Radio(
-                                value: 1,
-                                groupValue: _radioValue1,
-                                onChanged: _handleRadioValueChange1,
-                              ),
-                              new Text(
-                                '2+1',
-                                style: new TextStyle(
-                                  fontSize: 16.0,
+            future: getURLData(),
+            builder: (BuildContext context,AsyncSnapshot<String> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  break;
+                case ConnectionState.waiting:
+                  return new Center(child: new CircularProgressIndicator());
+                  break;
+                case ConnectionState.active:
+                  break;
+                case ConnectionState.done:
+                  _resetData();
+                  return new Container(
+                    child: new Center(
+                      child: new Column(
+                        children: <Widget>[
+                          new Padding(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                new Radio(
+                                  value: 0,
+                                  groupValue: _radioValue1,
+                                  onChanged: _handleRadioValueChange1,
                                 ),
-                              ),
-                              new Radio(
-                                value: 2,
-                                groupValue: _radioValue1,
-                                onChanged: _handleRadioValueChange1,
-                              ),
-                              new Text(
-                                '전부',
-                                style: new TextStyle(fontSize: 16.0),
-                              ),
-                            ],
-                          ),
-                        ),
-                        new Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              new Radio(
-                                value: 0,
-                                groupValue: _radioValue2,
-                                onChanged: _handleRadioValueChange2,
-                              ),
-                              new Text(
-                                '음료',
-                                style: new TextStyle(fontSize: 16.0),
-                              ),
-                              new Radio(
-                                value: 1,
-                                groupValue: _radioValue2,
-                                onChanged: _handleRadioValueChange2,
-                              ),
-                              new Text(
-                                '생활용품',
-                                style: new TextStyle(
-                                  fontSize: 16.0,
+                                new Text(
+                                  '1+1',
+                                  style: new TextStyle(fontSize: 16.0),
                                 ),
-                              ),
-                              new Radio(
-                                value: 2,
-                                groupValue: _radioValue2,
-                                onChanged: _handleRadioValueChange2,
-                              ),
-                              new Text(
-                                '과자',
-                                style: new TextStyle(fontSize: 16.0),
-                              ),
-                              new Radio(
-                                value: 3,
-                                groupValue: _radioValue2,
-                                onChanged: _handleRadioValueChange2,
-                              ),
-                              new Text(
-                                '식품',
-                                style: new TextStyle(fontSize: 16.0),
-                              ),
-                            ],
-                          ),
-                        ),
-                        new Padding(
-                          padding: EdgeInsets.only(top: 20.0 ,bottom: 20.0),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              new Radio(
-                                value: 4,
-                                groupValue: _radioValue2,
-                                onChanged: _handleRadioValueChange2,
-                              ),
-                              new Text(
-                                '아이스크림',
-                                style: new TextStyle(fontSize: 16.0),
-                              ),
-                              new Radio(
-                                value: 5,
-                                groupValue: _radioValue2,
-                                onChanged: _handleRadioValueChange2,
-                              ),
-                              new Text(
-                                '전부',
-                                style: new TextStyle(
-                                  fontSize: 16.0,
+                                new Radio(
+                                  value: 1,
+                                  groupValue: _radioValue1,
+                                  onChanged: _handleRadioValueChange1,
                                 ),
-                              ),
-                            ],
+                                new Text(
+                                  '2+1',
+                                  style: new TextStyle(
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                new Radio(
+                                  value: 2,
+                                  groupValue: _radioValue1,
+                                  onChanged: _handleRadioValueChange1,
+                                ),
+                                new Text(
+                                  '전부',
+                                  style: new TextStyle(fontSize: 16.0),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        new FlatButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TabHome(
-                                          itemValue: viewArray,
-                                          priceValue: priceArray,
-                                        )),
-                              );
-                            },
-                            padding: EdgeInsets.all(15.0),
-                            shape: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(25.0))),
-                            child: new Text(
-                              '검색 하기',
-                              style: TextStyle(
-                                  fontSize: 25.0, color: Colors.black),
-                            ))
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.center,
+                          new Padding(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                new Radio(
+                                  value: 0,
+                                  groupValue: _radioValue2,
+                                  onChanged: _handleRadioValueChange2,
+                                ),
+                                new Text(
+                                  '음료',
+                                  style: new TextStyle(fontSize: 16.0),
+                                ),
+                                new Radio(
+                                  value: 1,
+                                  groupValue: _radioValue2,
+                                  onChanged: _handleRadioValueChange2,
+                                ),
+                                new Text(
+                                  '생활용품',
+                                  style: new TextStyle(
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                new Radio(
+                                  value: 2,
+                                  groupValue: _radioValue2,
+                                  onChanged: _handleRadioValueChange2,
+                                ),
+                                new Text(
+                                  '과자',
+                                  style: new TextStyle(fontSize: 16.0),
+                                ),
+                                new Radio(
+                                  value: 3,
+                                  groupValue: _radioValue2,
+                                  onChanged: _handleRadioValueChange2,
+                                ),
+                                new Text(
+                                  '식품',
+                                  style: new TextStyle(fontSize: 16.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          new Padding(
+                            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                new Radio(
+                                  value: 4,
+                                  groupValue: _radioValue2,
+                                  onChanged: _handleRadioValueChange2,
+                                ),
+                                new Text(
+                                  '아이스크림',
+                                  style: new TextStyle(fontSize: 16.0),
+                                ),
+                                new Radio(
+                                  value: 5,
+                                  groupValue: _radioValue2,
+                                  onChanged: _handleRadioValueChange2,
+                                ),
+                                new Text(
+                                  '전부',
+                                  style: new TextStyle(
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          new FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TabHome(
+                                        itemValue: viewArray,
+                                        priceValue: priceArray,
+                                      )),
+                                );
+                              },
+                              padding: EdgeInsets.all(15.0),
+                              shape: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(25.0))),
+                              child: new Text(
+                                '검색 하기',
+                                style: TextStyle(
+                                    fontSize: 25.0, color: Colors.black),
+                              ))
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                  break;
+              }
+
             }));
   }
 
@@ -290,6 +324,4 @@ class InitAppHome extends State<InitApp> {
       return true;
     }
   }
-
-
 }
