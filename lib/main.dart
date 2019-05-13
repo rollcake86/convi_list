@@ -248,7 +248,7 @@ class InitAppHome extends State<InitApp> {
   }
 
   String _getCharge(String array) {
-    String result = array.substring(array.length - 4, array.length);
+    String result = array.substring(array.length - 3, array.length);
     return result;
   }
 
