@@ -7,14 +7,15 @@ import 'package:share/share.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class ConApp extends StatefulWidget {
-  ConApp({Key key, this.title, this.viewArray, this.priceArray}) : super(key: key);
+  ConApp({Key key, this.title, this.viewArray, this.priceArray})
+      : super(key: key);
   final String title;
   final List<String> viewArray;
   final List<String> priceArray;
 
   @override
   State<StatefulWidget> createState() {
-    return new ConHome(title , viewArray, priceArray);
+    return new ConHome(title, viewArray, priceArray);
   }
 }
 
@@ -31,18 +32,21 @@ class ConHome extends State<ConApp> {
 
   List<String> conViewArray;
   List<String> conPriceArray;
+  String companyName;
 
   String _newVoiceText;
   var counter = 20;
 
   TtsState ttsState = TtsState.stopped;
 
-  ConHome(String title , List<String> itemArray, List<String> priceArray) {
+  bool voiceCheck = true;
+
+  ConHome(String title, List<String> itemArray, List<String> priceArray) {
+    companyName = title;
     conViewArray = new List();
     conPriceArray = new List();
-
-    for(int i = 0 ; i < itemArray.length ; i++){
-      if(itemArray[i].contains(title)){
+    for (int i = 0; i < itemArray.length; i++) {
+      if (itemArray[i].contains(title)) {
         this.conViewArray.add(itemArray[i]);
         this.conPriceArray.add(priceArray[i]);
       }
@@ -62,11 +66,16 @@ class ConHome extends State<ConApp> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+        actions: <Widget>[  new Text('TTS Use' , style: TextStyle(fontSize: 20.0 ,height: 1.8),),
+          new Switch(value: voiceCheck, onChanged: _changeVoice , activeColor: Colors.amber,)],
+      ),
       body: new Container(
         child: new Column(
           children: <Widget>[
             Expanded(
-             child: new ListView.builder(
+              child: new ListView.builder(
                   itemCount: conViewArray.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
@@ -77,10 +86,11 @@ class ConHome extends State<ConApp> {
                               padding: EdgeInsets.only(
                                   top: 20.0, left: 10.0, right: 10.0),
                               child: new Text(
-                                _productName(_getCompany(conViewArray[index])),
-                                style:
-                                new TextStyle(fontSize: counter.toDouble()),
-                                textAlign: TextAlign.start,
+                                _productName(_getShowItem(
+                                    _getCompany(conViewArray[index]))),
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: counter.toDouble()),
                               ),
                             ),
                             new Padding(
@@ -96,15 +106,17 @@ class ConHome extends State<ConApp> {
                         ),
                         shape: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(25.0))),
+                                BorderRadius.all(Radius.circular(25.0))),
                       ),
                       onTap: () {
-                        _onChange(
-                            _productName(conViewArray[index]) + conPriceArray[index]);
+                        if (voiceCheck)
+                          _onChange(_productName(
+                              _getShowItem(_getCompany(conViewArray[index]))));
                       },
                       onLongPress: () {
                         Clipboard.setData(new ClipboardData(
-                            text: _productName(conViewArray[index]) +
+                            text: _productName(_getShowItem(
+                                _getCompany(conViewArray[index]))) +
                                 conPriceArray[index]));
                         Scaffold.of(context).showSnackBar(new SnackBar(
                           content: new Text("복사되었습니다"),
@@ -115,34 +127,46 @@ class ConHome extends State<ConApp> {
             ),
             new Row(
               children: <Widget>[
-                new FlatButton(
-                    onPressed: () {
-                      setState(() {
-                        if (counter > 11) {
-                          counter--;
-                          counter--;
-                        }
-                      });
-                    },
-                    child: new Text(
-                      '-',
-                      style: TextStyle(fontSize: 30.0),
-                    )),
-                new FlatButton(
-                    onPressed: () {
-                      setState(() {
-                        if (counter < 99) {
-                          counter++;
-                          counter++;
-                        }
-                      });
-                    },
-                    child: new Text(
-                      '+',
-                      style: TextStyle(fontSize: 30.0),
-                    )),
+                new Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: new FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          if (counter > 11) {
+                            counter--;
+                            counter--;
+                          }
+                        });
+                      },
+                      shape: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.0))),
+                      child: new Text(
+                        '-',
+                        style: TextStyle(fontSize: 40.0),
+                      )),
+                ),
+                new Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: new FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          if (counter < 99) {
+                            counter++;
+                            counter++;
+                          }
+                        });
+                      },
+                      shape: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.0))),
+                      child: new Text(
+                        '+',
+                        style: TextStyle(fontSize: 40.0),
+                      )),
+                ),
               ],
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             )
           ],
         ),
@@ -151,8 +175,9 @@ class ConHome extends State<ConApp> {
           child: new Icon(Icons.share),
           onPressed: () {
             StringBuffer sb = new StringBuffer();
-            for (var item in conViewArray) {
-              sb.write(item + "\n");
+            for (int i = 0; i < conViewArray.length; i++) {
+              sb.write(widget.title + "\n\n" +_productName(_getShowItem(
+                  _getCompany(conViewArray[i]))) + "\n" + conPriceArray[i] + "\n\n");
             }
             Share.share(sb.toString());
           }),
@@ -224,7 +249,6 @@ class ConHome extends State<ConApp> {
   }
 
   String _productName(String viewArray) {
-    print(viewArray);
     if (viewArray.contains("생활용품")) {
       return viewArray.substring(4, viewArray.length);
     } else if (viewArray.contains("음료")) {
@@ -232,7 +256,7 @@ class ConHome extends State<ConApp> {
     } else if (viewArray.contains("아이스크림")) {
       return viewArray.substring(5, viewArray.length);
     } else if (viewArray.contains("과자")) {
-      return viewArray.substring(2, viewArray.length);
+      return viewArray.substring(3, viewArray.length);
     } else if (viewArray.contains("음료")) {
       return viewArray.substring(2, viewArray.length);
     } else if (viewArray.contains("식품")) {
@@ -243,14 +267,13 @@ class ConHome extends State<ConApp> {
   }
 
   String _getCompany(String title) {
-    print(title);
     if (title.contains('CU')) {
       return title.substring('CU(씨유)'.length, title.length);
     } else if (title.contains('GS25')) {
       return title.substring('GS25(지에스25)'.length, title.length);
     } else if (title.contains('7-ELEVEN')) {
       return title.substring('7-ELEVEN(세븐일레븐)'.length, title.length);
-    } else if (title .contains('EMART24')) {
+    } else if (title.contains('EMART24')) {
       return title.substring('EMART24(이마트24)'.length, title.length);
     } else {
       return title.substring('MINISTOP(미니스톱)'.length, title.length);
@@ -260,6 +283,23 @@ class ConHome extends State<ConApp> {
   String _getProduct(String array, String value) {
     String result = array.substring(value.length, array.length);
     return result;
+  }
+
+  String _getShowItem(String getCompany) {
+    int last = getCompany.lastIndexOf(" ");
+    String temp = getCompany.substring(0, last);
+    int price = temp.lastIndexOf(" ");
+    String result = getCompany.substring(0, price) +
+        "\n" +
+        getCompany.substring(price + 1, temp.length);
+    return result + "원";
+  }
+
+
+  void _changeVoice(bool value) async {
+    setState(() {
+      voiceCheck = value;
+    });
   }
 
 }

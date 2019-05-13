@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'tab/ConHome.dart';
 import 'tab/TabHome.dart';
 
@@ -36,6 +37,8 @@ class InitAppHome extends State<InitApp> {
   List<String> viewArray;
   List<String> priceArray;
 
+  bool voiceCheck = true;
+
   Future<String> getData() {
     return DefaultAssetBundle.of(context).loadString('temp/temp.txt');
   }
@@ -44,12 +47,11 @@ class InitAppHome extends State<InitApp> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('조건 검색'),
+          title: new Text('Con List - 조건 검색'),
         ),
         body: new FutureBuilder(
             future: getData(),
             builder: (context, snapshot) {
-              if (snapshot.data != null) {
                 array = snapshot.data.toString().split("\n");
                 _resetData();
                 return new Container(
@@ -93,73 +95,79 @@ class InitAppHome extends State<InitApp> {
                             ],
                           ),
                         ),
-                        new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            new Radio(
-                              value: 0,
-                              groupValue: _radioValue2,
-                              onChanged: _handleRadioValueChange2,
-                            ),
-                            new Text(
-                              '음료',
-                              style: new TextStyle(fontSize: 16.0),
-                            ),
-                            new Radio(
-                              value: 1,
-                              groupValue: _radioValue2,
-                              onChanged: _handleRadioValueChange2,
-                            ),
-                            new Text(
-                              '생활용품',
-                              style: new TextStyle(
-                                fontSize: 16.0,
+                        new Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              new Radio(
+                                value: 0,
+                                groupValue: _radioValue2,
+                                onChanged: _handleRadioValueChange2,
                               ),
-                            ),
-                            new Radio(
-                              value: 2,
-                              groupValue: _radioValue2,
-                              onChanged: _handleRadioValueChange2,
-                            ),
-                            new Text(
-                              '과자',
-                              style: new TextStyle(fontSize: 16.0),
-                            ),
-                            new Radio(
-                              value: 3,
-                              groupValue: _radioValue2,
-                              onChanged: _handleRadioValueChange2,
-                            ),
-                            new Text(
-                              '식품',
-                              style: new TextStyle(fontSize: 16.0),
-                            ),
-                          ],
+                              new Text(
+                                '음료',
+                                style: new TextStyle(fontSize: 16.0),
+                              ),
+                              new Radio(
+                                value: 1,
+                                groupValue: _radioValue2,
+                                onChanged: _handleRadioValueChange2,
+                              ),
+                              new Text(
+                                '생활용품',
+                                style: new TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              new Radio(
+                                value: 2,
+                                groupValue: _radioValue2,
+                                onChanged: _handleRadioValueChange2,
+                              ),
+                              new Text(
+                                '과자',
+                                style: new TextStyle(fontSize: 16.0),
+                              ),
+                              new Radio(
+                                value: 3,
+                                groupValue: _radioValue2,
+                                onChanged: _handleRadioValueChange2,
+                              ),
+                              new Text(
+                                '식품',
+                                style: new TextStyle(fontSize: 16.0),
+                              ),
+                            ],
+                          ),
                         ),
-                        new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            new Radio(
-                              value: 4,
-                              groupValue: _radioValue2,
-                              onChanged: _handleRadioValueChange2,
-                            ),
-                            new Text(
-                              '아이스크림',
-                              style: new TextStyle(fontSize: 16.0),
-                            ),
-                            new Radio(
-                              value: 5,
-                              groupValue: _radioValue2,
-                              onChanged: _handleRadioValueChange2,
-                            ),
-                            new Text(
-                              '전부',
-                              style: new TextStyle(
-                                fontSize: 16.0,
+                        new Padding(
+                          padding: EdgeInsets.only(top: 20.0 ,bottom: 20.0),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              new Radio(
+                                value: 4,
+                                groupValue: _radioValue2,
+                                onChanged: _handleRadioValueChange2,
                               ),
-                            ),
-                          ],
+                              new Text(
+                                '아이스크림',
+                                style: new TextStyle(fontSize: 16.0),
+                              ),
+                              new Radio(
+                                value: 5,
+                                groupValue: _radioValue2,
+                                onChanged: _handleRadioValueChange2,
+                              ),
+                              new Text(
+                                '전부',
+                                style: new TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         new FlatButton(
                             onPressed: () {
@@ -172,8 +180,12 @@ class InitAppHome extends State<InitApp> {
                                         )),
                               );
                             },
+                            padding: EdgeInsets.all(15.0),
+                            shape: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25.0))),
                             child: new Text(
-                              '검색 하기', 
+                              '검색 하기',
                               style: TextStyle(
                                   fontSize: 25.0, color: Colors.black),
                             ))
@@ -182,7 +194,6 @@ class InitAppHome extends State<InitApp> {
                     ),
                   ),
                 );
-              }
             }));
   }
 
@@ -279,4 +290,6 @@ class InitAppHome extends State<InitApp> {
       return true;
     }
   }
+
+
 }
