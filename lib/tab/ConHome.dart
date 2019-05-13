@@ -41,6 +41,8 @@ class ConHome extends State<ConApp> {
 
   bool voiceCheck = true;
 
+  int voiceStart = 0;
+
   ConHome(String title, List<String> itemArray, List<String> priceArray) {
     companyName = title;
     conViewArray = new List();
@@ -64,13 +66,28 @@ class ConHome extends State<ConApp> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    flutterTts.stop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         backgroundColor: _getThemeColor(widget.title),
         title: new Text(widget.title),
-        actions: <Widget>[  new Text('TTS Use' , style: TextStyle(fontSize: 20.0 ,height: 1.8),),
-          new Switch(value: voiceCheck, onChanged: _changeVoice , activeColor: Colors.amber,)],
+        actions: <Widget>[
+          new Text(
+            'TTS Use',
+            style: TextStyle(fontSize: 20.0, height: 1.8),
+          ),
+          new Switch(
+            value: voiceCheck,
+            onChanged: _changeVoice,
+            activeColor: Colors.amber,
+          )
+        ],
       ),
       body: new Container(
         child: new Column(
@@ -92,6 +109,7 @@ class ConHome extends State<ConApp> {
                                 style: new TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: counter.toDouble()),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                             new Padding(
@@ -117,7 +135,7 @@ class ConHome extends State<ConApp> {
                       onLongPress: () {
                         Clipboard.setData(new ClipboardData(
                             text: _productName(_getShowItem(
-                                _getCompany(conViewArray[index]))) +
+                                    _getCompany(conViewArray[index]))) +
                                 conPriceArray[index]));
                         Scaffold.of(context).showSnackBar(new SnackBar(
                           content: new Text("복사되었습니다"),
@@ -126,8 +144,10 @@ class ConHome extends State<ConApp> {
                     );
                   }),
             ),
-            new Container(color: Colors.blueGrey , height: 2,)
-            ,
+            new Container(
+              color: Colors.blueGrey,
+              height: 2,
+            ),
             new Row(
               children: <Widget>[
                 new Padding(
@@ -168,6 +188,24 @@ class ConHome extends State<ConApp> {
                         style: TextStyle(fontSize: 40.0),
                       )),
                 ),
+                new Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: new FlatButton(
+                      onPressed: () {
+                        _onChange(_productName(_getShowItem(_getCompany(conViewArray[voiceStart]))) + conPriceArray[voiceStart]);
+                        voiceStart++;
+                      },
+                      shape: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.0))),
+                      child: new Icon(Icons.list , size: 48.0,)),
+                ),
+                new Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: new FlatButton(
+                    onPressed: () {},
+                  ),
+                ),
               ],
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             )
@@ -180,18 +218,23 @@ class ConHome extends State<ConApp> {
             StringBuffer sb = new StringBuffer();
             sb.write(widget.title + "\n\n");
             for (int i = 0; i < conViewArray.length; i++) {
-              sb.write(_productName(_getShowItem(
-                  _getCompany(conViewArray[i]))) + "\n" + conPriceArray[i] + "\n\n");
+              sb.write(
+                  _productName(_getShowItem(_getCompany(conViewArray[i]))) +
+                      "\n" +
+                      conPriceArray[i] +
+                      "\n\n");
             }
             Share.share(sb.toString());
           }),
     );
   }
 
+
+
   initTts() async {
     flutterTts = FlutterTts();
 
-    await flutterTts.setPitch(0.8);
+    await flutterTts.setPitch(0.9);
 
     if (Platform.isAndroid) {
       flutterTts.ttsInitHandler(() {
@@ -299,25 +342,23 @@ class ConHome extends State<ConApp> {
     return result + "원";
   }
 
-
   void _changeVoice(bool value) async {
     setState(() {
       voiceCheck = value;
     });
   }
-
 }
 
- Color _getThemeColor(String title) {
-   if (title.contains('CU')) {
-     return Colors.red;
-   } else if (title.contains('GS25')) {
-     return Colors.blue;
-   } else if (title.contains('7-ELEVEN')) {
-     return Colors.green;
-   } else if (title.contains('EMART24')) {
-     return Colors.blueGrey;
-   } else {
-     return Colors.brown;
-   }
+Color _getThemeColor(String title) {
+  if (title.contains('CU')) {
+    return Colors.red;
+  } else if (title.contains('GS25')) {
+    return Colors.blue;
+  } else if (title.contains('7-ELEVEN')) {
+    return Colors.green;
+  } else if (title.contains('EMART24')) {
+    return Colors.blueGrey;
+  } else {
+    return Colors.brown;
+  }
 }
