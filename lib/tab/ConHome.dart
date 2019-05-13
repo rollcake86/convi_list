@@ -67,6 +67,7 @@ class ConHome extends State<ConApp> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: _getThemeColor(widget.title),
         title: new Text(widget.title),
         actions: <Widget>[  new Text('TTS Use' , style: TextStyle(fontSize: 20.0 ,height: 1.8),),
           new Switch(value: voiceCheck, onChanged: _changeVoice , activeColor: Colors.amber,)],
@@ -125,6 +126,8 @@ class ConHome extends State<ConApp> {
                     );
                   }),
             ),
+            new Container(color: Colors.blueGrey , height: 2,)
+            ,
             new Row(
               children: <Widget>[
                 new Padding(
@@ -303,4 +306,18 @@ class ConHome extends State<ConApp> {
     });
   }
 
+}
+
+ Color _getThemeColor(String title) {
+   if (title.contains('CU')) {
+     return Colors.red;
+   } else if (title.contains('GS25')) {
+     return Colors.blue;
+   } else if (title.contains('7-ELEVEN')) {
+     return Colors.green;
+   } else if (title.contains('EMART24')) {
+     return Colors.blueGrey;
+   } else {
+     return Colors.brown;
+   }
 }
