@@ -175,8 +175,9 @@ class ConHome extends State<ConApp> {
           child: new Icon(Icons.share),
           onPressed: () {
             StringBuffer sb = new StringBuffer();
+            sb.write(widget.title + "\n\n");
             for (int i = 0; i < conViewArray.length; i++) {
-              sb.write(widget.title + "\n\n" +_productName(_getShowItem(
+              sb.write(_productName(_getShowItem(
                   _getCompany(conViewArray[i]))) + "\n" + conPriceArray[i] + "\n\n");
             }
             Share.share(sb.toString());

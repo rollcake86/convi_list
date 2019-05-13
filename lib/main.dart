@@ -47,7 +47,7 @@ class InitAppHome extends State<InitApp> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Con List - 조건 검색'),
+          title: new Text('콘비 리스트 - 조건 검색'),
         ),
         body: new FutureBuilder(
             future: getData(),
