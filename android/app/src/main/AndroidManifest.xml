@@ -8,7 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Con List"
+        android:label="콘비리스트"
         android:icon="@drawable/cart">
         <activity
             android:name=".MainActivity"
