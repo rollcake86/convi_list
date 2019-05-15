@@ -4,6 +4,7 @@ import 'ConHome.dart';
 
 var appTitle = '';
 bool voiceCheck = true;
+var counter = 20;
 
 class TabHome extends StatefulWidget {
   TabHome({Key key, this.itemValue, this.priceValue}) : super(key: key);
@@ -76,7 +77,6 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
             viewArray: itemValue,
             priceArray: priceValue,
           ),
-
           new ConApp(
             title: "EMART24",
             viewArray: itemValue,
@@ -111,17 +111,14 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
     );
   }
 
-
   void _changeVoice(bool value) async {
     setState(() {
       voiceCheck = value;
     });
   }
 
-
-
   void _changeTab() {
-    switch(tabController.index){
+    switch (tabController.index) {
       case 0:
         setState(() {
           appTitle = "GS25";

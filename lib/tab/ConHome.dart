@@ -38,7 +38,6 @@ class ConHome extends State<ConApp> {
   String companyName;
 
   String _newVoiceText;
-  var counter = 20;
 
   TtsState ttsState = TtsState.stopped;
 
@@ -79,7 +78,6 @@ class ConHome extends State<ConApp> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-
       body: new Container(
         child: new Column(
           children: <Widget>[
