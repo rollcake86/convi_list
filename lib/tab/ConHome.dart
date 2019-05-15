@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+
+import 'TabHome.dart';
 
 class ConApp extends StatefulWidget {
   ConApp({Key key, this.title, this.viewArray, this.priceArray})
@@ -39,12 +42,11 @@ class ConHome extends State<ConApp> {
 
   TtsState ttsState = TtsState.stopped;
 
-  bool voiceCheck = true;
-
   int voiceStart = 0;
 
-  ConHome(String title, List<String> itemArray, List<String> priceArray) {
+  ConHome(String title, List<String> itemArray, List<String> priceArray ) {
     companyName = title;
+
     conViewArray = new List();
     conPriceArray = new List();
     for (int i = 0; i < itemArray.length; i++) {
@@ -63,6 +65,9 @@ class ConHome extends State<ConApp> {
   void initState() {
     super.initState();
     initTts();
+    setState(() {
+      appTitle = widget.title;
+    });
   }
 
   @override
@@ -74,21 +79,7 @@ class ConHome extends State<ConApp> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        backgroundColor: _getThemeColor(widget.title),
-        title: new Text(widget.title),
-        actions: <Widget>[
-          new Text(
-            'TTS Use',
-            style: TextStyle(fontSize: 20.0, height: 1.8),
-          ),
-          new Switch(
-            value: voiceCheck,
-            onChanged: _changeVoice,
-            activeColor: Colors.amber,
-          )
-        ],
-      ),
+
       body: new Container(
         child: new Column(
           children: <Widget>[
@@ -342,23 +333,5 @@ class ConHome extends State<ConApp> {
     return result + "원";
   }
 
-  void _changeVoice(bool value) async {
-    setState(() {
-      voiceCheck = value;
-    });
-  }
-}
 
-Color _getThemeColor(String title) {
-  if (title.contains('CU')) {
-    return Colors.red;
-  } else if (title.contains('GS25')) {
-    return Colors.blue;
-  } else if (title.contains('7-ELEVEN')) {
-    return Colors.green;
-  } else if (title.contains('EMART24')) {
-    return Colors.blueGrey;
-  } else {
-    return Colors.brown;
-  }
 }

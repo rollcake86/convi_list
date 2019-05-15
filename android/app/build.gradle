@@ -43,7 +43,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.rollcake.convenience_list_app"
         minSdkVersion 21
         targetSdkVersion 28
@@ -69,11 +68,10 @@ android {
     }
     buildTypes {
         release {
-//            signingConfig signingConfigs.release
-//            signingConfig signingConfigs.release
-//            minifyEnabled true
-//            useProguard true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

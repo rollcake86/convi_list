@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'ConHome.dart';
 
+var appTitle = '';
+bool voiceCheck = true;
+
 class TabHome extends StatefulWidget {
   TabHome({Key key, this.itemValue, this.priceValue}) : super(key: key);
   final List<String> itemValue;
@@ -24,6 +27,7 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     tabController = new TabController(length: 5, vsync: this);
+    tabController.addListener(_changeTab);
   }
 
   @override
@@ -35,6 +39,21 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+        backgroundColor: _getThemeColor(appTitle),
+        title: new Text(appTitle),
+        actions: <Widget>[
+          new Text(
+            'TTS Use',
+            style: TextStyle(fontSize: 20.0, height: 1.8),
+          ),
+          new Switch(
+            value: voiceCheck,
+            onChanged: _changeVoice,
+            activeColor: Colors.amber,
+          )
+        ],
+      ),
       body: new TabBarView(
         children: <Widget>[
           new ConApp(
@@ -90,5 +109,58 @@ class TabHomeApp extends State<TabHome> with SingleTickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+
+  void _changeVoice(bool value) async {
+    setState(() {
+      voiceCheck = value;
+    });
+  }
+
+
+
+  void _changeTab() {
+    switch(tabController.index){
+      case 0:
+        setState(() {
+          appTitle = "GS25";
+        });
+        break;
+      case 1:
+        setState(() {
+          appTitle = "CU";
+        });
+        break;
+      case 2:
+        setState(() {
+          appTitle = "7-ELEVEN";
+        });
+        break;
+      case 3:
+        setState(() {
+          appTitle = "EMART24";
+        });
+        break;
+      case 4:
+        setState(() {
+          appTitle = "MINISTOP";
+        });
+        break;
+    }
+  }
+}
+
+Color _getThemeColor(String title) {
+  if (title.contains('CU')) {
+    return Colors.red;
+  } else if (title.contains('GS25')) {
+    return Colors.blue;
+  } else if (title.contains('7-ELEVEN')) {
+    return Colors.green;
+  } else if (title.contains('EMART24')) {
+    return Colors.blueGrey;
+  } else {
+    return Colors.brown;
   }
 }
