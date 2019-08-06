@@ -52,9 +52,7 @@ class InitAppHome extends State<InitApp> {
         body: new FutureBuilder(
             future: getData(),
             builder: (context, snapshot) {
-
               switch(snapshot.connectionState){
-
                 case ConnectionState.none:
                   return new Center(child: Text(''),);
                   break;
@@ -209,7 +207,9 @@ class InitAppHome extends State<InitApp> {
                   );
                   break;
               }
+              return CircularProgressIndicator();
             }));
+
   }
 
   void _handleRadioValueChange1(value) async {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'ConHome.dart';
 
-var appTitle = '';
+var appTitle = 'GS25';
 bool voiceCheck = true;
 var counter = 20;
 
